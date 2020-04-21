@@ -1,0 +1,44 @@
+# ~/.profile: executed by the command interpreter for login shells.
+# This file is not read by bash(1), if ~/.bash_profile or ~/.bash_login
+# exists.
+# see /usr/share/doc/bash/examples/startup-files for examples.
+# the files are located in the bash-doc package.
+
+# the default umask is set in /etc/profile; for setting the umask
+# for ssh logins, install and configure the libpam-umask package.
+#umask 022
+
+# if running bash
+if [ -n "$BASH_VERSION" ]; then
+    # include .bashrc if it exists
+    if [ -f "$HOME/.bashrc" ]; then
+	. "$HOME/.bashrc"
+    fi
+fi
+
+export GOROOT=/usr/local/go
+export GOPATH="$HOME/Projects/gopath"
+
+# set PATH so it includes user's private bin directories
+PATH="$HOME/bin:$HOME/.local/bin:$PATH:$GOPATH/bin:$GOROOT/bin:/var/lib/gems/2.3.0/gems/puppet-lint-2.3.3/bin:var/lib/gems/2.3.0/gems/metadata-json-lint-2.1.0/bin:/snap/bin:/opt/ApacheDirectoryStudio"
+
+# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
+export PATH="$PATH:$HOME/.rvm/bin"
+
+export PASSWORD_STORE_DIR="$HOME/.password-store/kosmos/"
+
+function git_retag() {
+    git tag --delete $1
+    git tag $1
+    git push origin :$1
+    git push origin $1
+}
+
+function passdir() {
+    export PASSWORD_STORE_DIR="$HOME/.password-store/$1/"
+}
+
+function ssh () {TERM=xterm-256color /usr/bin/ssh -t $@ "type tmux &> /dev/null && (tmux attach || tmux new) || eval \$SHELL";}
+
+[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
+rvm reset
